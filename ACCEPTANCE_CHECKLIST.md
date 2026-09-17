@@ -8,18 +8,21 @@ Mark only observed results. Automated backend tests do not prove voice behavior.
 - [x] Delivered status spoken explicitly after prompt correction; checked call transcript.
 - [x] Docker deployment on Render served live API and authenticated dashboard.
 - [x] Unauthorized API requests return 401.
-- [ ] Browser handoff support desk deployed.
-- [ ] Customer /voice page works with actual microphone/audio.
+- [x] Browser handoff support desk deployed; user exercised solo join controls.
+- [x] Customer /voice page works with actual microphone/audio; user confirmed conversation with Robin.
 - [ ] Live two-person human takeover passes two-way audio and AI silence.
-- [ ] Rep unavailable branch demonstrated with no false callback promise.
+- [x] Rep unavailable branch demonstrated with no false callback promise; checked live transcript.
 - [ ] Multiple-order disambiguation demonstrated by voice.
 - [ ] Split shipment and unshipped order demonstrated by voice.
 - [ ] Wrong identity does not disclose order information.
 - [ ] Carrier exception receives appropriate human escalation.
 - [ ] Provider failure returns an honest unavailable message, not fake live data.
 - [ ] Dashboard visually checked on desktop and narrow screen.
-- [ ] Repository README updated for the final implementation.
+- [x] Repository README updated for the current implementation and remaining limits.
 - [ ] Repository reflects all final changes, and .env is absent.
 - [ ] Short video recorded, duration <= 5 minutes, no secrets visible.
 - [ ] Assistant link and review access verified.
 - [ ] Client email finalized and reviewed by user; submission sent by user.
+
+- [ ] New conversation brief visible and accurate before/during a fresh handoff.
+- [ ] Recording coverage of human audio verified, or limitation disclosed.

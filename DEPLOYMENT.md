@@ -19,4 +19,7 @@ Official constraints: https://render.com/docs/free
 SQLite remains the local default. Set DATABASE_URL only for PostgreSQL; otherwise DATABASE_PATH is used.
 For local Docker SQLite persistence use docker compose up --build.
 Run tests with no DATABASE_URL set; tests deliberately use isolated SQLite databases.
-PostgreSQL runtime and Docker execution still require deployment verification.
+The deployed Render Docker API and PostgreSQL runtime have been verified. Local Docker Compose still needs an independent run.
+
+## Browser calls and support desk
+Set VAPI_PUBLIC_KEY and VAPI_ASSISTANT_ID on the Render web service and redeploy. Do not add VAPI_PRIVATE_KEY. Set PUBLIC_API_URL locally before running configure_vapi.py. Open /voice for the customer and /support for the rep, with microphone permission allowed.
