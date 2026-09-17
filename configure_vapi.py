@@ -44,6 +44,7 @@ payload = {
     'voice': {'provider': 'vapi', 'voiceId': 'Elliot'},
     'transcriber': {'provider': 'deepgram', 'model': 'nova-2', 'language': 'en'},
     'maxDurationSeconds': 600,
+    'customerJoinTimeoutSeconds': 60,
     'serverMessages': ['tool-calls', 'end-of-call-report'],
 }
 if base_url:
