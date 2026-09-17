@@ -41,7 +41,7 @@ payload = {
     'name': 'Bird Box | WISMO',
     'firstMessage': "Hi, I'm Robin, Bird Box's AI support assistant. I can help you check your order. Do you have your order number?",
     'model': {'provider': 'openai', 'model': 'gpt-4o-mini', 'messages': [{'role': 'system', 'content': prompt}]},
-    'voice': {'provider': 'vapi', 'voiceId': 'Elliot'},
+    'voice': {'provider': 'vapi', 'voiceId': 'Elliot', 'chunkPlan': {'formatPlan': {'enabled': False}}},
     'transcriber': {'provider': 'deepgram', 'model': 'nova-2', 'language': 'en'},
     'maxDurationSeconds': 600,
     'customerJoinTimeoutSeconds': 60,

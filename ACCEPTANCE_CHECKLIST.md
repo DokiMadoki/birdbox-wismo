@@ -12,9 +12,9 @@ Mark only observed results. Automated backend tests do not prove voice behavior.
 - [x] Customer /voice page works with actual microphone/audio; user confirmed conversation with Robin.
 - [ ] Live two-person human takeover passes two-way audio and AI silence.
 - [x] Rep unavailable branch demonstrated with no false callback promise; checked live transcript.
-- [ ] Multiple-order disambiguation demonstrated by voice.
+- [x] Multiple-order disambiguation demonstrated by voice; user reported success and transcript checked.
 - [ ] Split shipment and unshipped order demonstrated by voice.
-- [ ] Wrong identity does not disclose order information.
+- [x] Wrong identity did not disclose order details in the observed voice test.
 - [ ] Carrier exception receives appropriate human escalation.
 - [ ] Provider failure returns an honest unavailable message, not fake live data.
 - [ ] Dashboard visually checked on desktop and narrow screen.
@@ -26,3 +26,6 @@ Mark only observed results. Automated backend tests do not prove voice behavior.
 
 - [ ] New conversation brief visible and accurate before/during a fresh handoff.
 - [ ] Recording coverage of human audio verified, or limitation disclosed.
+
+- [ ] Unshipped arrival policy retested after removal of store estimate from voice tools.
+- [ ] Speech formatting retested: no spurious inches or Tee/tea pronunciation.

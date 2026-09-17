@@ -22,7 +22,7 @@ All customers and orders below are mock data. TrackingMore's official test carri
 
 Alex's email alone returns two orders for disambiguation. Order number plus email, or order number plus shipping postcode, is sufficient verification. Demo postcode is `10001`. An order number alone does not reveal details. The tool removes email, phone, and full address from verified results.
 
-Tracking checkpoints can predate the mock purchase dates because the carrier fixtures are canned data. The agent reports the carrier's dates accurately. The store's estimated delivery is never presented as a confirmed carrier ETA. Missing provider records and outages return an explicit unavailable result.
+Tracking checkpoints can predate the mock purchase dates because the carrier fixtures are canned data. The agent reports the carrier's dates accurately. The store's original estimate remains in the mock database but is excluded from voice tools. Only a live carrier estimate can be reported as an ETA. Missing provider records and outages return an explicit unavailable result.
 
 ## Local setup
 

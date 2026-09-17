@@ -127,5 +127,20 @@ class BackendTests(unittest.TestCase):
         self.assertEqual(result['shipments'][0]['tracking']['state'], 'provider_unavailable')
         self.assertEqual(result['shipments'][1]['tracking']['state'], 'not_shipped')
 
+    def test_store_estimate_not_exposed_as_voice_arrival_date(self):
+        for number, email in [('BB1045', 'alex@example.com'), ('BB1046', 'taylor@example.com')]:
+            lookup = self.post('/orders/lookup', {'order_number': number, 'email': email})
+            self.assertEqual(lookup['state'], 'verified')
+            self.assertNotIn('estimated_delivery', lookup['order'])
+            with patch('app.fetch_tracking', new=AsyncMock(return_value={'state': 'not_shipped'})):
+                result = self.post('/orders/tracking', {'order_number': number, 'email': email})
+            self.assertNotIn('purchase_estimated_delivery', result)
+            self.assertNotIn('estimated_delivery', result)
+        from contextlib import closing
+        with closing(app.connect(app.DB)) as db:
+            import json
+            order = json.loads(db.execute('SELECT data FROM orders WHERE order_id=?', ('order-BB1045',)).fetchone()[0])
+        self.assertIn('estimated_delivery', order)
+
 if __name__ == '__main__':
     unittest.main()

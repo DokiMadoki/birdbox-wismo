@@ -140,9 +140,9 @@ def lookup_orders(query):
         return {'state': 'multiple_orders', 'orders': [{'order_number': o['order_number'], 'created_at': o['created_at'], 'line_items': o['line_items']} for o in candidates]}
     order = dict(candidates[0])
     # Do not return full address, email, or phone to the language model.
-    for field in ('shipping_address', 'email', 'phone'):
+    for field in ('shipping_address', 'email', 'phone', 'estimated_delivery'):
         order.pop(field, None)
-    return {'state': 'verified', 'order': order}
+    return {'state': 'verified', 'order': order, 'message': 'For an order-status question, call track_order now with the same verification values. Lookup is not live tracking. No store estimate is a confirmed arrival date.'}
 
 @app.get('/health')
 def health():
@@ -154,7 +154,7 @@ def lookup(query: Lookup):
 
 async def fetch_tracking(shipment):
     if not shipment['tracking_number']:
-        return {'state': 'not_shipped', 'message': 'No tracking number available. Do not promise a shipment date.'}
+        return {'state': 'not_shipped', 'message': 'This package has not shipped. No confirmed shipping or arrival date is available. Do not give a store estimate or invent a date.'}
     key = os.getenv('TRACKINGMORE_API_KEY', '')
     if not key:
         return {'state': 'provider_unavailable', 'message': 'Live tracking not configured. Offer human help; never invent a status.'}
@@ -185,7 +185,7 @@ async def tracking(query: Lookup):
     shipments = []
     for shipment in order['shipments']:
         shipments.append({'shipment_id': shipment['shipment_id'], 'line_items': shipment['line_items'], 'tracking': await fetch_tracking(shipment)})
-    return {'state': 'verified', 'order_number': order['order_number'], 'fulfillment_status': order['fulfillment_status'], 'purchase_estimated_delivery': order['estimated_delivery'], 'shipments': shipments, 'message': 'Purchase estimate is not a live carrier ETA. Explain each package separately.' if shipments else 'Order has not shipped. No carrier status or live ETA available.'}
+    return {'state': 'verified', 'order_number': order['order_number'], 'fulfillment_status': order['fulfillment_status'], 'shipments': shipments, 'message': 'Explain each package separately. Only report an ETA returned by the carrier for that package. Unshipped packages have no confirmed shipping or arrival date.' if shipments else 'Order has not shipped. No carrier status or live ETA available.'}
 
 class Outcome(BaseModel):
     outcome: Literal['resolved', 'escalated', 'unresolved']
