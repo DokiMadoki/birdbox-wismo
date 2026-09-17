@@ -12,9 +12,9 @@ lookup_schema = {
     'type': 'object',
     'properties': {name: {'type': 'string', 'description': description} for name, description in {
         'order_number': 'Customer order number, for example BB1042',
-        'email': 'Email supplied by the caller for lookup or verification',
-        'phone': 'Phone supplied by caller in international format',
-        'postcode': 'Shipping postcode supplied by caller for verification',
+        'email': 'Email supplied by caller. With order_number, sufficient verification; no postcode or phone needed.',
+        'phone': 'Optional phone supplied by caller for lookup. Omit if not supplied.',
+        'postcode': 'Alternative to email. Omit when caller supplies email; do not ask for both.',
     }.items()},
 }
 outcome_schema = {
@@ -31,8 +31,8 @@ outcome_schema = {
 tools = [
     {'type': 'function', 'function': {'name': name, 'description': description, 'parameters': schema}}
     for name, description, schema in [
-        ('lookup_order', 'Verify caller and locate the correct order; handle multiple orders.', lookup_schema),
-        ('track_order', 'Fetch live carrier tracking for a selected verified order.', lookup_schema),
+        ('lookup_order', 'Call immediately when order_number and email are available. Those two fields suffice; postcode and phone are optional alternatives. Never request extra fields before trying this tool.', lookup_schema),
+        ('track_order', 'Immediately fetch live tracking after order verification, including missing-delivery complaints. Reuse the successful email or postcode; do not request another verification factor.', lookup_schema),
         ('record_outcome', 'Record outcome and customer sentiment. Escalation request is not completed transfer.', outcome_schema),
     ]
 ]
