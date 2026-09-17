@@ -39,3 +39,6 @@ Provider-hosted AI audio is muted on takeover; it remains in the room. This is a
 The AI/provider may continue recording or transcribing until the customer ends the call.
 Rep availability expires 45 seconds after the last successful heartbeat.
 The pilot is single brand, basic shared-key authentication, and not a production helpdesk.
+
+## Conversation brief
+Before joining, check the queue card displays the verified order (or unverified), customer issue, checks already performed, and requested next step. Once joined, the current conversation brief stays visible above the queue. It is an AI summary, not a verified transcript; confirm uncertain details. No email, phone, full address, or postcode should appear. An immediate human request should not require order lookup first.
