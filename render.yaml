@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: birdbox-wismo
+    runtime: docker
+    plan: free
+    envVars:
+      - key: APP_API_KEY
+        sync: false
+      - key: TRACKINGMORE_API_KEY
+        sync: false
+      - key: DATABASE_URL
+        fromDatabase:
+          name: birdbox-orders
+          property: connectionString
+databases:
+  - name: birdbox-orders
+    plan: free
+    databaseName: birdbox
+    user: birdbox
