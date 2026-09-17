@@ -1,10 +1,11 @@
 import os
 import tempfile
 import unittest
-from unittest.mock import patch
+from unittest.mock import patch, AsyncMock, MagicMock
 os.environ['APP_API_KEY'] = 'test-key-' + 'x' * 40
 from fastapi.testclient import TestClient
 import app
+import handoff
 
 class BackendTests(unittest.TestCase):
     def setUp(self):
@@ -34,6 +35,61 @@ class BackendTests(unittest.TestCase):
         self.assertEqual(self.client.get('/').status_code, 200)
         self.assertEqual(self.client.get('/metrics').status_code, 200)
         self.assertEqual(self.client.post('/orders/lookup', json={'email': 'alex@example.com'}).status_code, 401)
+        self.assertEqual(self.client.post('/support/presence', json={'rep_id': 'rep', 'ready': True}).status_code, 403)
+        self.assertEqual(self.client.post('/support/presence', json={'rep_id': 'rep', 'ready': True}, headers={'Origin': 'http://testserver'}).status_code, 200)
+    def fake_handoff_call(self):
+        return {'id': 'handoff-call', 'webCallUrl': 'https://vapi.daily.co/test-room', 'monitor': {'controlUrl': 'https://test.vapi.ai/test-call/control'}}
+    def request_handoff(self):
+        return self.post('/vapi/webhook', {'message': {'type': 'tool-calls', 'call': self.fake_handoff_call(), 'toolCallList': [{'id': 'handoff-tool', 'name': 'request_human', 'parameters': {'reason': 'delivered_missing', 'summary': 'Verified customer reports missing delivery.'}}]}})
+    def test_handoff_unavailable_waiting_and_single_claim(self):
+        import json
+        result = self.request_handoff()
+        self.assertEqual(json.loads(result['results'][0]['result'])['state'], 'unavailable')
+        self.post('/support/presence', {'rep_id': 'rep', 'ready': True})
+        result = self.request_handoff()
+        self.assertEqual(json.loads(result['results'][0]['result'])['state'], 'waiting')
+        self.assertIn('room_url', self.post('/support/join', {'call_id': 'handoff-call'}))
+        response = self.client.post('/support/join', json={'call_id': 'handoff-call'}, headers=self.headers)
+        self.assertEqual(response.status_code, 409)
+    def test_handoff_join_confirmation_and_end_retains_history(self):
+        self.post('/support/presence', {'rep_id': 'rep', 'ready': True})
+        self.request_handoff()
+        self.post('/support/join', {'call_id': 'handoff-call'})
+        mock_client = AsyncMock()
+        mock_client.post.return_value = MagicMock()
+        with patch('handoff.httpx.AsyncClient') as factory:
+            factory.return_value.__aenter__ = AsyncMock(return_value=mock_client)
+            factory.return_value.__aexit__ = AsyncMock(return_value=None)
+            result = self.post('/support/connected', {'call_id': 'handoff-call'})
+        self.assertEqual(result['state'], 'connected')
+        mock_client.post.assert_awaited_once_with('https://test.vapi.ai/test-call/control', json={'type': 'control', 'control': 'mute-assistant'})
+        self.post('/vapi/webhook', {'message': {'type': 'end-of-call-report', 'call': {'id': 'handoff-call'}, 'durationSeconds': 10}})
+        rows = handoff.handoff_rows(app.DB)
+        self.assertEqual(rows[0]['state'], 'ended')
+        self.assertIsNotNone(rows[0]['joined_at'])
+        self.assertEqual(self.client.post('/support/join', json={'call_id': 'handoff-call'}, headers=self.headers).status_code, 409)
+    def test_handoff_rejects_unsafe_provider_urls(self):
+        self.post('/support/presence', {'rep_id': 'rep', 'ready': True})
+        call = self.fake_handoff_call()
+        call['monitor']['controlUrl'] = 'http://127.0.0.1/private'
+        result = handoff.request_handoff(app.DB, call, {'reason': 'human_requested', 'summary': 'Please connect a human.'})
+        self.assertEqual(result['state'], 'unavailable')
+        self.assertFalse(handoff.safe_room('https://vapi.daily.co.evil.example/room'))
+    def test_failed_ai_mute_is_not_a_completed_handoff(self):
+        import httpx
+        self.post('/support/presence', {'rep_id': 'rep', 'ready': True})
+        self.request_handoff()
+        self.post('/support/join', {'call_id': 'handoff-call'})
+        mock_client = AsyncMock()
+        mock_client.post.side_effect = httpx.ConnectError('Provider unavailable')
+        with patch('handoff.httpx.AsyncClient') as factory:
+            factory.return_value.__aenter__ = AsyncMock(return_value=mock_client)
+            factory.return_value.__aexit__ = AsyncMock(return_value=None)
+            response = self.client.post('/support/connected', json={'call_id': 'handoff-call'}, headers=self.headers)
+        self.assertEqual(response.status_code, 502)
+        row = handoff.handoff_rows(app.DB)[0]
+        self.assertEqual(row['state'], 'failed')
+        self.assertIsNone(row['joined_at'])
     def test_duration_from_top_level_webhook(self):
         self.post('/vapi/webhook', {'message': {'type': 'end-of-call-report', 'call': {'id': 'duration-call'}, 'startedAt': '2026-09-17T12:00:00Z', 'endedAt': '2026-09-17T12:02:00Z'}})
         result = self.client.get('/metrics', headers=self.headers).json()

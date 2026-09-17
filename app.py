@@ -10,10 +10,11 @@ from datetime import datetime, timezone
 import httpx
 from dotenv import load_dotenv
 from fastapi import Depends, FastAPI, Header, HTTPException, Body, Request
-from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.responses import HTMLResponse, JSONResponse, FileResponse
 from pydantic import BaseModel, Field
 from typing import Literal
 from seed import initialize
+from handoff import initialize_handoffs, request_handoff, close_handoff, handoff_rows, routes
 
 load_dotenv()
 DB = os.getenv('DATABASE_URL') or os.getenv('DATABASE_PATH', 'birdbox.db')
@@ -22,12 +23,17 @@ def authenticate(request: Request, x_api_key: str = Header(default='')):
     if request.url.path == '/login':
         return
     expected = os.getenv('APP_API_KEY', '')
-    if expected and request.method == 'GET' and request.url.path in ('/', '/metrics'):
+    browser_read = request.method == 'GET' and request.url.path in ('/', '/metrics', '/voice', '/support', '/support/queue', '/assets/daily.js', '/assets/room.js', '/assets/handoff_dashboard.js')
+    browser_write = request.method == 'POST' and request.url.path in ('/voice/start', '/support/presence', '/support/join', '/support/connected', '/support/leave')
+    if expected and (browser_read or browser_write):
         token = request.cookies.get('birdbox_session', '')
         try:
             expiry, signature = token.split('.', 1)
             valid = hmac.new(expected.encode(), expiry.encode(), 'sha256').hexdigest()
             if time.time() < int(expiry) <= time.time() + 28800 and hmac.compare_digest(signature, valid):
+                origin_base = str(request.base_url).rstrip('/') if request.url.hostname in ('localhost', '127.0.0.1', 'testserver') else 'https://' + request.headers.get('host', '')
+                if browser_write and request.headers.get('Origin') != origin_base:
+                    raise HTTPException(403, 'Same-origin browser request required')
                 return
         except (ValueError, TypeError):
             pass
@@ -39,11 +45,13 @@ async def lifespan(app):
     if len(os.getenv('APP_API_KEY', '')) < 32:
         raise RuntimeError('Set APP_API_KEY to a random value of at least 32 characters in .env')
     initialize(DB)
+    initialize_handoffs(DB)
     with closing(connect(DB)) as db, db:
         db.execute("CREATE TABLE IF NOT EXISTS calls (call_id TEXT PRIMARY KEY, outcome TEXT NOT NULL DEFAULT 'unresolved', sentiment TEXT NOT NULL DEFAULT 'unknown', issue_type TEXT, summary TEXT, order_number TEXT, completed INTEGER NOT NULL DEFAULT 0, duration REAL, ended_reason TEXT, created_at TEXT NOT NULL)")
     yield
 
 app = FastAPI(title='Bird Box WISMO', lifespan=lifespan, dependencies=[Depends(authenticate)], docs_url=None, redoc_url=None, openapi_url=None)
+routes(app, lambda: DB)
 
 @app.middleware('http')
 async def response_headers(request, call_next):
@@ -76,6 +84,12 @@ def login(data: Login, request: Request):
 def dashboard():
     return (Path(__file__).parent / 'dashboard.html').read_text(encoding='utf-8')
 
+@app.get('/assets/{name}')
+def room_asset(name: str):
+    if name not in ('daily.js', 'room.js', 'handoff_dashboard.js'):
+        raise HTTPException(404, 'Asset not found')
+    return FileResponse(Path(__file__).parent / 'assets' / name, media_type='application/javascript')
+
 class Lookup(BaseModel):
     order_number: str | None = Field(default=None, max_length=40)
     email: str | None = Field(default=None, max_length=254)
@@ -101,7 +115,7 @@ def normalize_tracking(record):
         'latest_checkpoint_time': record.get('latest_checkpoint_time'),
         'estimated_delivery': record.get('scheduled_delivery_date') or record.get('estimated_delivery'),
         'eta_available': bool(record.get('scheduled_delivery_date') or record.get('estimated_delivery')),
-        'message': 'Report the carrier checkpoint date; this may be old. No ETA means no confirmed delivery date. Carrier test checkpoints may predate the mock order.',
+        'message': 'State carrier-marked delivered status and checkpoint date. Do not discuss a future ETA. Confirm receipt or handle a missing-delivery report.' if record.get('delivery_status') == 'delivered' else 'State carrier status and checkpoint date; this may be old. No ETA means no confirmed delivery date. Carrier test checkpoints may predate the mock order.',
     }
 
 def lookup_orders(query):
@@ -216,6 +230,11 @@ async def vapi_webhook(payload: dict = Body(...)):
                         ensure_call(db, call_id)
                         db.execute('UPDATE calls SET outcome=?, sentiment=?, issue_type=?, summary=?, order_number=? WHERE call_id=?', (outcome.outcome, outcome.sentiment, outcome.issue_type, outcome.summary, outcome.order_number, call_id))
                     result = {'state': 'recorded', 'message': 'Outcome saved. This does not create a callback or complete a human transfer.'}
+                elif name == 'request_human':
+                    result = request_handoff(DB, call, args)
+                    with closing(connect(DB)) as db, db:
+                        ensure_call(db, call_id)
+                        db.execute("UPDATE calls SET outcome='escalated', issue_type=?, summary=? WHERE call_id=?", (args['reason'], args['summary'], call_id))
                 else:
                     result = {'state': 'unknown_tool'}
             except (ValueError, TypeError):
@@ -239,6 +258,7 @@ async def vapi_webhook(payload: dict = Body(...)):
         with closing(connect(DB)) as db, db:
             ensure_call(db, call_id)
             db.execute('UPDATE calls SET completed=1, duration=COALESCE(?, duration), ended_reason=COALESCE(?, ended_reason) WHERE call_id=?', (duration, reason, call_id))
+        close_handoff(DB, call_id)
         return {'state': 'recorded'}
     return {'state': 'ignored'}
 
@@ -258,4 +278,5 @@ def metrics():
         'duration_sample_count': len(durations),
         'classification_method': 'Voice agent tool classification; missing classification remains unresolved/unknown. Escalations represent requests, not completed transfers.',
         'calls': rows[:100],
+        'handoffs': handoff_rows(DB)[:100],
     }

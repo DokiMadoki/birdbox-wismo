@@ -34,6 +34,7 @@ tools = [
         ('lookup_order', 'Call immediately when order_number and email are available. Those two fields suffice; postcode and phone are optional alternatives. Never request extra fields before trying this tool.', lookup_schema),
         ('track_order', 'Immediately fetch live tracking after order verification, including missing-delivery complaints. Reuse the successful email or postcode; do not request another verification factor.', lookup_schema),
         ('record_outcome', 'Record outcome and customer sentiment. Escalation request is not completed transfer.', outcome_schema),
+        ('request_human', 'Request a browser human handoff when the caller needs a person. Waiting means not connected yet.', {'type': 'object', 'properties': {'reason': {'type': 'string', 'enum': ['delivered_missing', 'carrier_exception', 'address_change', 'refund_return_cancel', 'identity', 'human_requested', 'provider_error', 'other']}, 'summary': {'type': 'string', 'description': 'Concise verified order/issue context; no full address or email.'}}, 'required': ['reason', 'summary']}),
     ]
 ]
 payload = {
