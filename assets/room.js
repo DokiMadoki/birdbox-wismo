@@ -53,7 +53,10 @@ async function joinRoom(url, name, startMuted = false) {
   if (room) throw Error('Already on a call');
   const media = await prepareMicrophone();
   room = window.DailyIframe.createCallObject({audioSource: media.getAudioTracks()[0], videoSource: false});
-  room.on('participant-joined', syncAudio);
+  room.on('participant-joined', e => {
+    if (e.participant && !e.participant.local) room?.updateParticipant(e.participant.session_id, {setSubscribedTracks: {audio: true, video: false}});
+    syncAudio();
+  });
   room.on('participant-updated', syncAudio);
   room.on('participant-left', syncAudio);
   room.on('track-started', async e => {
@@ -80,10 +83,18 @@ async function joinRoom(url, name, startMuted = false) {
   });
   room.on('error', e => setStatus('Room connection error: ' + (e.errorMsg || e.error?.msg || 'connection lost')));
   try {
-    await room.join({url, userName: name, startVideoOff: true, startAudioOff: startMuted});
+    await room.join({url, ...(name === 'Customer' ? {} : {userName: name}), startVideoOff: true, startAudioOff: startMuted, subscribeToTracksAutomatically: false});
+    for (const participant of Object.values(room.participants())) {
+      if (!participant.local) room.updateParticipant(participant.session_id, {setSubscribedTracks: {audio: true, video: false}});
+    }
     await room.setLocalVideo(false);
     await room.setLocalAudio(!startMuted);
     syncAudio();
+    room.on('local-audio-level', e => {
+      const meter = document.getElementById('mic-level');
+      if (meter) meter.textContent = e.audioLevel > 0.01 ? 'Microphone: sound detected' : 'Microphone: quiet - try speaking';
+    });
+    room.startLocalAudioLevelObserver(200).catch(() => {});
     setStatus('Audio room joined. Waiting for Robin…');
   } catch (e) {
     await leaveRoom();
@@ -98,6 +109,8 @@ async function leaveRoom() {
   for (const player of players.values()) player.remove();
   players.clear();
   document.getElementById('participants').textContent = '';
+  const meter = document.getElementById('mic-level');
+  if (meter) meter.textContent = '';
 }
 document.getElementById('sound').onclick = () => {
   for (const player of players.values()) player.play().then(() => room?.sendAppMessage('playable')).catch(() => {});
