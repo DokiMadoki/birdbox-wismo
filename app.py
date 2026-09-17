@@ -1,13 +1,16 @@
 import hmac
 import json
 import os
+import time
+from pathlib import Path
 from database import connect
 from contextlib import asynccontextmanager, closing
 from datetime import datetime, timezone
 
 import httpx
 from dotenv import load_dotenv
-from fastapi import Depends, FastAPI, Header, HTTPException, Body
+from fastapi import Depends, FastAPI, Header, HTTPException, Body, Request
+from fastapi.responses import HTMLResponse, JSONResponse
 from pydantic import BaseModel, Field
 from typing import Literal
 from seed import initialize
@@ -15,8 +18,19 @@ from seed import initialize
 load_dotenv()
 DB = os.getenv('DATABASE_URL') or os.getenv('DATABASE_PATH', 'birdbox.db')
 
-def authenticate(x_api_key: str = Header(default='')):
+def authenticate(request: Request, x_api_key: str = Header(default='')):
+    if request.url.path == '/login':
+        return
     expected = os.getenv('APP_API_KEY', '')
+    if expected and request.method == 'GET' and request.url.path in ('/', '/metrics'):
+        token = request.cookies.get('birdbox_session', '')
+        try:
+            expiry, signature = token.split('.', 1)
+            valid = hmac.new(expected.encode(), expiry.encode(), 'sha256').hexdigest()
+            if time.time() < int(expiry) <= time.time() + 28800 and hmac.compare_digest(signature, valid):
+                return
+        except (ValueError, TypeError):
+            pass
     if not expected or not hmac.compare_digest(x_api_key, expected):
         raise HTTPException(401, 'Valid X-API-Key required')
 
@@ -30,6 +44,37 @@ async def lifespan(app):
     yield
 
 app = FastAPI(title='Bird Box WISMO', lifespan=lifespan, dependencies=[Depends(authenticate)], docs_url=None, redoc_url=None, openapi_url=None)
+
+@app.middleware('http')
+async def response_headers(request, call_next):
+    response = await call_next(request)
+    response.headers['Cache-Control'] = 'no-store'
+    response.headers['X-Content-Type-Options'] = 'nosniff'
+    response.headers['X-Frame-Options'] = 'DENY'
+    response.headers['Referrer-Policy'] = 'no-referrer'
+    return response
+
+@app.get('/login', response_class=HTMLResponse)
+def login_page():
+    return (Path(__file__).parent / 'login.html').read_text(encoding='utf-8')
+
+class Login(BaseModel):
+    api_key: str = Field(max_length=200)
+
+@app.post('/login')
+def login(data: Login, request: Request):
+    expected = os.getenv('APP_API_KEY', '')
+    if not expected or not hmac.compare_digest(data.api_key, expected):
+        raise HTTPException(401, 'Invalid dashboard access key')
+    expiry = str(int(time.time()) + 28800)
+    token = expiry + '.' + hmac.new(expected.encode(), expiry.encode(), 'sha256').hexdigest()
+    response = JSONResponse({'state': 'authenticated'})
+    response.set_cookie('birdbox_session', token, max_age=28800, httponly=True, secure=request.url.hostname not in ('localhost', '127.0.0.1', 'testserver'), samesite='strict')
+    return response
+
+@app.get('/', response_class=HTMLResponse)
+def dashboard():
+    return (Path(__file__).parent / 'dashboard.html').read_text(encoding='utf-8')
 
 class Lookup(BaseModel):
     order_number: str | None = Field(default=None, max_length=40)
@@ -180,11 +225,15 @@ async def vapi_webhook(payload: dict = Body(...)):
     if message.get('type') == 'end-of-call-report':
         duration = None
         try:
-            start = datetime.fromisoformat(call['startedAt'].replace('Z', '+00:00'))
-            end = datetime.fromisoformat(call['endedAt'].replace('Z', '+00:00'))
+            start = datetime.fromisoformat((message.get('startedAt') or call['startedAt']).replace('Z', '+00:00'))
+            end = datetime.fromisoformat((message.get('endedAt') or call['endedAt']).replace('Z', '+00:00'))
             duration = max(0, (end - start).total_seconds())
         except (KeyError, ValueError, TypeError, AttributeError):
             pass
+        if duration is None:
+            value = message.get('durationSeconds')
+            if isinstance(value, (int, float)) and not isinstance(value, bool) and 0 <= value <= 86400:
+                duration = value
         reason = message.get('endedReason')
         reason = reason[:200] if isinstance(reason, str) else None
         with closing(connect(DB)) as db, db:

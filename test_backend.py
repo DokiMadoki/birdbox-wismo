@@ -27,6 +27,17 @@ class BackendTests(unittest.TestCase):
         self.assertEqual(result['latest_checkpoint']['location'], 'New York')
         self.assertFalse(result['eta_available'])
         self.assertIsNone(result['estimated_delivery'])
+    def test_dashboard_login_does_not_authorize_mutating_tools(self):
+        self.assertEqual(self.client.get('/').status_code, 401)
+        self.assertEqual(self.client.post('/login', json={'api_key': 'wrong'}).status_code, 401)
+        self.assertEqual(self.client.post('/login', json={'api_key': os.environ['APP_API_KEY']}).status_code, 200)
+        self.assertEqual(self.client.get('/').status_code, 200)
+        self.assertEqual(self.client.get('/metrics').status_code, 200)
+        self.assertEqual(self.client.post('/orders/lookup', json={'email': 'alex@example.com'}).status_code, 401)
+    def test_duration_from_top_level_webhook(self):
+        self.post('/vapi/webhook', {'message': {'type': 'end-of-call-report', 'call': {'id': 'duration-call'}, 'startedAt': '2026-09-17T12:00:00Z', 'endedAt': '2026-09-17T12:02:00Z'}})
+        result = self.client.get('/metrics', headers=self.headers).json()
+        self.assertEqual(result['average_duration_seconds'], 120)
     def test_webhook_outcome_and_duplicate_completion(self):
         result = self.post('/vapi/webhook', {'message': {'type': 'tool-calls', 'call': {'id': 'demo-call'}, 'toolCallList': [{'id': 'tool-1', 'name': 'lookup_order', 'parameters': {'order_number': 'BB1042', 'email': 'alex@example.com'}}, {'id': 'tool-2', 'name': 'record_outcome', 'parameters': {'outcome': 'resolved', 'sentiment': 'neutral', 'issue_type': 'tracking', 'summary': 'Customer confirmed the status answered their question.'}}]}})
         self.assertEqual(len(result['results']), 2)

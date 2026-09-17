@@ -3,6 +3,7 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 COPY app.py seed.py database.py ./
+COPY dashboard.html login.html ./
 RUN useradd --create-home app && mkdir /data && chown app:app /data
 USER app
 ENV DATABASE_PATH=/data/birdbox.db
