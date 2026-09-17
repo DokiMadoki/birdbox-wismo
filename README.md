@@ -72,7 +72,7 @@ The unmodified Daily browser library is pinned to `@daily-co/daily-js` 0.92.2 fr
 | GET /voice | Customer browser call |
 | GET /support | Human support desk |
 
-Resolution rate includes all recorded calls; only caller-confirmed resolution should be marked resolved. Duration uses provider timestamps. Sentiment is the agent's classification, with unknown allowed; it is not a customer survey. Escalation requests and reported rep joins are displayed separately. A reported join means room join plus accepted AI mute, not independent proof of two-way audio.
+Resolution rate includes completed recorded calls; only caller-confirmed resolution should be marked resolved. Duration uses provider timestamps. Sentiment is the agent's classification, with unknown allowed; it is not a customer survey. Escalation requests and reported rep joins are displayed separately. A reported join means room join plus accepted AI mute, not independent proof of two-way audio.
 
 ## Docker and cloud
 
