@@ -1,4 +1,4 @@
-# Browser human handoff: verification still required
+# Browser human handoff: two-person audio test passed
 
 This is a same-room browser takeover, not a PSTN telephone transfer or assistant-to-assistant transfer.
 It uses a Vapi Daily audio room, a protected support queue, staff availability, and Vapi's mute-assistant control.
@@ -27,7 +27,7 @@ Save/redeploy, then update the assistant by running configure_vapi.py locally.
 ## Alone before helper arrives
 You can test login, queue, availability, the customer voice page, and a request with no rep.
 Two tabs on one device are not sufficient evidence of a two-person live voice transfer.
-Provider room admission and multi-party audio behavior remain external dependencies until the real test passes.
+The two-person test has now passed based on the user and helper's report. Provider room admission and multi-party audio still depend on Vapi/Daily availability.
 
 ## Provider references
 https://docs.vapi.ai/calls/call-features
@@ -42,3 +42,6 @@ The pilot is single brand, basic shared-key authentication, and not a production
 
 ## Conversation brief
 Before joining, check the queue card displays the verified order (or unverified), customer issue, checks already performed, and requested next step. Once joined, the current conversation brief stays visible above the queue. It is an AI summary, not a verified transcript; confirm uncertain details. No email, phone, full address, or postcode should appear. An immediate human request should not require order lookup first.
+
+## Observed result
+In the live test, Vikash acted as the support rep and the helper acted as the customer. They confirmed they could both hear each other, Robin remained silent, and the brief described the issue. This validates the browser takeover flow; end-of-call history and human recording coverage still need separate checks.

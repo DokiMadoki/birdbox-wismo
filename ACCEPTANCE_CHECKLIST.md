@@ -10,7 +10,7 @@ Mark only observed results. Automated backend tests do not prove voice behavior.
 - [x] Unauthorized API requests return 401.
 - [x] Browser handoff support desk deployed; user exercised solo join controls.
 - [x] Customer /voice page works with actual microphone/audio; user confirmed conversation with Robin.
-- [ ] Live two-person human takeover passes two-way audio and AI silence.
+- [x] Live two-person human takeover passed: user and helper confirmed two-way audio and Robin silent.
 - [x] Rep unavailable branch demonstrated with no false callback promise; checked live transcript.
 - [x] Multiple-order disambiguation demonstrated by voice; user reported success and transcript checked.
 - [ ] Split shipment and unshipped order demonstrated by voice.
@@ -24,8 +24,9 @@ Mark only observed results. Automated backend tests do not prove voice behavior.
 - [ ] Assistant link and review access verified.
 - [ ] Client email finalized and reviewed by user; submission sent by user.
 
-- [ ] New conversation brief visible and accurate before/during a fresh handoff.
+- [x] Conversation brief described the customer issue in the live helper test.
 - [ ] Recording coverage of human audio verified, or limitation disclosed.
 
-- [ ] Unshipped arrival policy retested after removal of store estimate from voice tools.
-- [ ] Speech formatting retested: no spurious inches or Tee/tea pronunciation.
+- [x] BB1045 retested; user confirmed correct unshipped response.
+- [x] Spurious inches pronunciation retested; user confirmed it did not occur.
+- [ ] T-shirt pronunciation confirmed after formatting change.

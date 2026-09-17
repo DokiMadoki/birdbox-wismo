@@ -6,7 +6,7 @@ A browser voice assistant for Bird Box order support, built for the Picolo FDE c
 
 The customer starts an audio call at `/voice`. Vapi provides speech recognition, the language model, and Robin's voice. Its authenticated tools call FastAPI to verify the order, fetch tracking, record outcomes, or request human support. The custom dashboard uses the application's own call records.
 
-A human marks themselves available at `/support`, reviews the conversation brief, and joins the same Daily audio room. After the rep joins, the backend requests Vapi to mute Robin. Leaving the support call restores AI audio. This is a browser room takeover; Robin remains in the room. A real two-person test is still required to verify the human audio path. See [HANDOFF_TEST.md](HANDOFF_TEST.md).
+A human marks themselves available at `/support`, reviews the conversation brief, and joins the same Daily audio room. After the rep joins, the backend requests Vapi to mute Robin. Leaving the support call restores AI audio. This is a browser room takeover; Robin remains in the room. A live two-person test passed: the user and helper confirmed audio in both directions, Robin silent, and an accurate issue brief. See [HANDOFF_TEST.md](HANDOFF_TEST.md).
 
 ## Demo scenarios
 

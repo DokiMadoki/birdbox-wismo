@@ -15,7 +15,7 @@ Video walkthrough: [ADD VIDEO LINK]
 
 Tracking uses TrackingMore's official test carrier records, with mock customer orders. This is a proof of concept, and the free hosting/database limits are documented.
 
-[REPLACE AFTER TESTING: Describe the verified browser human takeover, or explicitly state the human handoff remains incomplete. Do not claim it works until a real two-person test passes.]
+The browser human handoff was tested with two people: the support rep received the issue brief, joined the customer's audio room, and took over while Robin remained silent. Both participants confirmed they could hear each other.
 
 [ADD: Secure method for providing limited review access. Do not send the private Vapi or TrackingMore API keys.]
 
