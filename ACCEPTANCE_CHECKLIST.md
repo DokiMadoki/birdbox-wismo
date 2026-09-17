@@ -25,7 +25,7 @@ Mark only observed results. Automated backend tests do not prove voice behavior.
 - [ ] Client email finalized and reviewed by user; submission sent by user.
 
 - [x] Conversation brief described the customer issue in the live helper test.
-- [ ] Recording coverage of human audio verified, or limitation disclosed.
+- [x] Vapi recording limitation verified and documented: customer audible, human rep omitted.
 
 - [x] BB1045 retested; user confirmed correct unshipped response.
 - [x] Spurious inches pronunciation retested; user confirmed it did not occur.

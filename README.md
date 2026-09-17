@@ -95,4 +95,6 @@ Observed live checks and pending work are in [ACCEPTANCE_CHECKLIST.md](ACCEPTANC
 
 ## Pilot limits
 
-Orders are mock data, with no Shopify write access. Robin cannot issue refunds, cancel orders, or change addresses. Human actions remain manual. Free Render services can sleep; warm the app before calls. Free PostgreSQL expires after 30 days and has no backups. Browser handoff keeps the AI/provider session active, and recording coverage of the human participant is not yet verified. Current application-key login is for a controlled pilot; production would need separate customer and staff access, stronger verification, retention controls, and durable hosting.
+Orders are mock data, with no Shopify write access. Robin cannot issue refunds, cancel orders, or change addresses. Human actions remain manual. Free Render services can sleep; warm the app before calls. Free PostgreSQL expires after 30 days and has no backups. Browser handoff keeps the AI/provider session active, and the observed Vapi recording captured the customer but omitted the human rep. Current application-key login is for a controlled pilot; production would need separate customer and staff access, stronger verification, retention controls, and durable hosting.
+
+For the system walkthrough and interview preparation, see [UNDERSTANDING_THE_PROJECT.md](UNDERSTANDING_THE_PROJECT.md).

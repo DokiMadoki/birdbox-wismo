@@ -45,3 +45,6 @@ Before joining, check the queue card displays the verified order (or unverified)
 
 ## Observed result
 In the live test, Vikash acted as the support rep and the helper acted as the customer. They confirmed they could both hear each other, Robin remained silent, and the brief described the issue. This validates the browser takeover flow; end-of-call history and human recording coverage still need separate checks.
+
+## Recording coverage observed
+The user played the Vapi recording of the helper test and heard the customer but not the human support agent. Therefore Vapi recording does not capture the complete handoff exchange in the current configuration. Live two-way audio passed separately. For the walkthrough, capture the support rep's microphone plus browser audio and verify both voices in playback before the final recording.
