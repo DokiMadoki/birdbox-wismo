@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080"><rect width="1920" height="1080" fill="#f5f6f2"/>
+<text x="65" y="67" font-family="Arial, sans-serif" font-size="22" font-weight="700" fill="#627269">BIRD BOX  /  ROBIN</text>
+<text x="65" y="139" font-family="Arial, sans-serif" font-size="54" font-weight="700" fill="#193d32">Voice support architecture</text>
+<text x="65" y="182" font-family="Arial, sans-serif" font-size="28" font-weight="400" fill="#627269">Order verification, carrier tracking, human takeover, and a custom operations dashboard</text>
+<rect x="965" y="235" width="465" height="750" rx="22" fill="#eaf0e6" stroke="#91ad91" stroke-width="2"/>
+<text x="995" y="277" font-family="Arial, sans-serif" font-size="22" font-weight="700" fill="#627269">RENDER  /  DOCKER API</text>
+<rect x="65" y="325" width="320" height="205" rx="18" fill="#ffffff" stroke="#cdd8cf" stroke-width="2"/>
+<text x="89" y="377" font-family="Arial, sans-serif" font-size="30" font-weight="700" fill="#193d32">Customer browser</text>
+<text x="89" y="422" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#193d32">Start a voice call</text>
+<text x="89" y="457" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#193d32">Microphone + audio</text>
+<text x="89" y="510" font-family="Arial, sans-serif" font-size="20" font-weight="400" fill="#627269">/voice  |  HTTPS login</text>
+<rect x="490" y="325" width="360" height="205" rx="18" fill="#ffffff" stroke="#cdd8cf" stroke-width="2"/>
+<text x="514" y="377" font-family="Arial, sans-serif" font-size="30" font-weight="700" fill="#193d32">Vapi / Robin</text>
+<text x="514" y="422" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#193d32">Speech recognition + AI</text>
+<text x="514" y="457" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#193d32">Text-to-speech replies</text>
+<text x="514" y="510" font-family="Arial, sans-serif" font-size="20" font-weight="400" fill="#627269">Calls backend tools</text>
+<rect x="995" y="325" width="405" height="255" rx="18" fill="#ffffff" stroke="#cdd8cf" stroke-width="2"/>
+<text x="1019" y="377" font-family="Arial, sans-serif" font-size="30" font-weight="700" fill="#193d32">FastAPI tools</text>
+<text x="1019" y="422" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#193d32">Verify and find orders</text>
+<text x="1019" y="457" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#193d32">Fetch tracking per package</text>
+<text x="1019" y="492" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#193d32">Save outcomes + handoffs</text>
+<text x="1019" y="560" font-family="Arial, sans-serif" font-size="20" font-weight="400" fill="#627269">Authenticated Vapi webhooks</text>
+<rect x="1490" y="300" width="365" height="205" rx="18" fill="#ffffff" stroke="#cdd8cf" stroke-width="2"/>
+<text x="1514" y="352" font-family="Arial, sans-serif" font-size="30" font-weight="700" fill="#193d32">PostgreSQL</text>
+<text x="1514" y="397" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#193d32">Mock Shopify orders</text>
+<text x="1514" y="432" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#193d32">Call records + handoffs</text>
+<text x="1514" y="485" font-family="Arial, sans-serif" font-size="20" font-weight="400" fill="#627269">Managed database on Render</text>
+<rect x="1490" y="575" width="365" height="205" rx="18" fill="#ffffff" stroke="#cdd8cf" stroke-width="2"/>
+<text x="1514" y="627" font-family="Arial, sans-serif" font-size="30" font-weight="700" fill="#193d32">TrackingMore API</text>
+<text x="1514" y="672" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#193d32">Carrier status + checkpoint</text>
+<text x="1514" y="707" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#193d32">Carrier ETA, when available</text>
+<text x="1514" y="760" font-family="Arial, sans-serif" font-size="20" font-weight="400" fill="#627269">Official test-carrier fixtures</text>
+<rect x="65" y="750" width="320" height="200" rx="18" fill="#ffffff" stroke="#cdd8cf" stroke-width="2"/>
+<text x="89" y="802" font-family="Arial, sans-serif" font-size="30" font-weight="700" fill="#193d32">Human support rep</text>
+<text x="89" y="847" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#193d32">Read the issue brief</text>
+<text x="89" y="882" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#193d32">Join the customer</text>
+<text x="89" y="930" font-family="Arial, sans-serif" font-size="20" font-weight="400" fill="#627269">/support  |  Browser login</text>
+<rect x="490" y="750" width="360" height="200" rx="18" fill="#ffffff" stroke="#cdd8cf" stroke-width="2"/>
+<text x="514" y="802" font-family="Arial, sans-serif" font-size="30" font-weight="700" fill="#193d32">Daily audio room</text>
+<text x="514" y="847" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#193d32">Customer + Robin + rep</text>
+<text x="514" y="882" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#193d32">Robin muted on takeover</text>
+<text x="514" y="930" font-family="Arial, sans-serif" font-size="20" font-weight="400" fill="#627269">Browser handoff via Vapi</text>
+<rect x="995" y="750" width="405" height="200" rx="18" fill="#ffffff" stroke="#cdd8cf" stroke-width="2"/>
+<text x="1019" y="802" font-family="Arial, sans-serif" font-size="30" font-weight="700" fill="#193d32">Custom dashboard</text>
+<text x="1019" y="847" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#193d32">Outcomes, issues, sentiment</text>
+<text x="1019" y="882" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#193d32">Duration + handoff history</text>
+<text x="1019" y="930" font-family="Arial, sans-serif" font-size="20" font-weight="400" fill="#627269">HTML / JavaScript  |  /metrics</text>
+<polyline points="385,410 490,410" fill="none" stroke="#739b84" stroke-width="4"/>
+<polygon points="490,410 478,403 478,417" fill="#739b84"/>
+<text x="399" y="387" font-family="Arial, sans-serif" font-size="20" font-weight="400" fill="#193d32">Voice</text>
+<polyline points="850,410 995,410" fill="none" stroke="#739b84" stroke-width="4"/>
+<polygon points="995,410 983,403 983,417" fill="#739b84"/>
+<text x="865" y="387" font-family="Arial, sans-serif" font-size="20" font-weight="400" fill="#193d32">Tools</text>
+<polyline points="1400,405 1490,405" fill="none" stroke="#739b84" stroke-width="4"/>
+<polygon points="1490,405 1478,398 1478,412" fill="#739b84"/>
+<text x="1410" y="381" font-family="Arial, sans-serif" font-size="19" font-weight="400" fill="#193d32">Read /</text>
+<text x="1410" y="403" font-family="Arial, sans-serif" font-size="19" font-weight="400" fill="#193d32">write</text>
+<polyline points="1400,535 1450,535 1450,665 1490,665" fill="none" stroke="#739b84" stroke-width="4"/>
+<polygon points="1490,665 1478,658 1478,672" fill="#739b84"/>
+<text x="1458" y="551" font-family="Arial, sans-serif" font-size="19" font-weight="400" fill="#193d32">Live fetch</text>
+<polyline points="1197,580 1197,750" fill="none" stroke="#739b84" stroke-width="4"/>
+<polygon points="1197,750 1190,738 1204,738" fill="#739b84"/>
+<text x="1215" y="674" font-family="Arial, sans-serif" font-size="22" font-weight="400" fill="#193d32">Records / metrics</text>
+<polyline points="670,530 670,750" fill="none" stroke="#739b84" stroke-width="4"/>
+<polygon points="670,750 663,738 677,738" fill="#739b84"/>
+<text x="687" y="649" font-family="Arial, sans-serif" font-size="22" font-weight="400" fill="#193d32">Call audio</text>
+<polyline points="385,850 490,850" fill="none" stroke="#739b84" stroke-width="4"/>
+<polygon points="490,850 478,843 478,857" fill="#739b84"/>
+<text x="392" y="826" font-family="Arial, sans-serif" font-size="20" font-weight="400" fill="#193d32">Join</text>
+<polyline points="995,560 915,560 915,685 225,685 225,750" fill="none" stroke="#739b84" stroke-width="4"/>
+<polygon points="225,750 218,738 232,738" fill="#739b84"/>
+<text x="375" y="669" font-family="Arial, sans-serif" font-size="22" font-weight="400" fill="#193d32">Handoff queue + issue brief</text>
+<polyline points="130,530 130,610 450,610 450,785 490,785" fill="none" stroke="#739b84" stroke-width="4"/>
+<polygon points="490,785 478,778 478,792" fill="#739b84"/>
+<text x="225" y="593" font-family="Arial, sans-serif" font-size="22" font-weight="400" fill="#193d32">Customer audio</text>
+<text x="65" y="1034" font-family="Arial, sans-serif" font-size="23" font-weight="400" fill="#627269">PILOT: mock orders + test-carrier updates. Free hosting may cold-start; database expires October 17, 2026.</text>
+</svg>

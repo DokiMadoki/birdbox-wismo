@@ -1,28 +1,21 @@
-# Submission email draft — do not send yet
+# Submission email draft
 To: reuben@getpicolo.com; kanishk@getpicolo.com
-Subject: Bird Box WISMO voice agent — working proof of concept
+Subject: Bird Box — Robin WISMO voice assistant
 
 Hi Reuben and Kanishk,
 
-I built Robin, a browser-based WISMO voice assistant for Bird Box. It verifies the customer's order, retrieves mock Shopify order data from a database, and fetches shipment status through the TrackingMore API. It supports multiple orders, unshipped orders, split packages, and missing-delivery complaints, with clear limits for refunds and address changes.
+Robin, Bird Box's WISMO voice assistant, is ready for review. It verifies orders, fetches carrier updates through TrackingMore, handles split and unshipped orders, and supports browser handoff to a human with an issue brief. The custom dashboard reports call outcomes, sentiment, duration, and handoff history.
 
-The solution includes a custom dashboard based on recorded calls, showing outcomes, customer sentiment, duration, issue reasons, and escalation requests. The FastAPI backend is containerized and deployed on Render with HTTPS and key authentication; PostgreSQL stores orders and call records independently of the API container.
+- Video walkthrough (4:59): https://youtu.be/6maz-mvPz7o
+- Live demo: https://birdbox-wismo.onrender.com/login
+- GitHub repository: https://github.com/DokiMadoki/birdbox-wismo
+- Configured Vapi assistant: https://dashboard.vapi.ai/assistants/c27665f4-2e9b-4cd9-a9ac-86a606ff4628
 
-Repository: https://github.com/DokiMadoki/birdbox-wismo
-Deployment: https://birdbox-wismo.onrender.com/login
-Voice platform assistant: https://dashboard.vapi.ai/assistants/c27665f4-2e9b-4cd9-a9ac-86a606ff4628
-Customer browser demo: https://birdbox-wismo.onrender.com/login (review login opens the call page)
-Video walkthrough: [ADD VIDEO LINK]
+Browser review key: [INSERT REVIEW_ACCESS_KEY PRIVATELY — NOT APP_API_KEY]
 
-The Vapi link identifies the configured assistant; dashboard access may require Vapi account permissions. The hosted customer demo is available using the supplied browser review key.
+After login, you can start a customer call, open the dashboard, or use the human support desk. For a split-shipment example, use BB1046 with taylor@example.com. The repository's REVIEWER_INSTRUCTIONS.md includes other scenarios and the two-person handoff steps. The Vapi configuration link may require account permissions; the hosted demo requires only the supplied review key.
 
-Tracking uses TrackingMore's official test carrier records, with mock customer orders. This is a proof of concept, and the free hosting/database limits are documented.
-
-The browser human handoff was tested with two people: the support rep received the issue brief, joined the customer's audio room, and took over while Robin remained silent. Both participants confirmed they could hear each other.
-
-[ADD PRIVATELY: Browser-only review access key; never APP_API_KEY or provider keys. Verify review login in a fresh browser before sending.]
-
-The free service may take about a minute to wake after inactivity; please wait for the login page before starting a call. The free database expires on October 17, 2026; please evaluate the live demo before that date. Evaluation steps and test orders are in REVIEWER_INSTRUCTIONS.md in the repository.
+The Docker backend runs on Render over HTTPS, with PostgreSQL storing orders and call records. This prototype uses mock Shopify-style orders and official TrackingMore test-carrier data. The free service may take about a minute to wake; please evaluate the live demo before the database expires on October 17, 2026.
 
 Best,
-[YOUR NAME]
+Vikash

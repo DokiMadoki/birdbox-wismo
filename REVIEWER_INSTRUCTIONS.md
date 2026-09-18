@@ -2,6 +2,8 @@
 
 Demo: https://birdbox-wismo.onrender.com/login
 
+Video walkthrough (4:59): https://youtu.be/6maz-mvPz7o
+
 Use the browser review key supplied privately with the submission. No Vapi, TrackingMore, database, or backend API credentials are required. The review key grants dashboard, customer calls, and support-desk demo controls. It does not authorize direct tool APIs. This is a controlled pilot with shared evaluation access, not individual customer/staff accounts.
 
 The free service can take about a minute to wake after inactivity. Wait for the login page, sign in, and you will land on the customer call page. Use Chrome or Edge, allow microphone access, and enable sound if prompted. No telephone number is required.
