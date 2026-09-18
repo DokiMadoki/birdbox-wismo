@@ -16,7 +16,7 @@ Mark only observed results. Automated backend tests do not prove voice behavior.
 - [x] Unshipped order demonstrated by voice after ETA correction.
 - [ ] Split shipment live tracking demonstrated by voice after immediate-tracking correction.
 - [x] Wrong identity did not disclose order details in the observed voice test.
-- [ ] Carrier exception receives appropriate human escalation.
+- [x] Carrier-exception voice test passed based on user report.
 - [x] Provider failure returns unavailable without fake tracking in automated backend tests; no deliberate live outage induced.
 - [ ] Dashboard visually checked on desktop and narrow screen.
 - [x] Repository README updated for the current implementation and remaining limits.
@@ -35,3 +35,7 @@ Mark only observed results. Automated backend tests do not prove voice behavior.
 
 - [x] HTTPS certificate verification passed on the live deployment.
 - [x] Completed calls and ended rep-join history verified through the live metrics API.
+
+- [x] Address-change and refund requests respected action limits and used unavailable handoff flow in observed transcripts.
+- [ ] Delivered response asks whether received before assuming missing; retest after removing order-specific prompt example.
+- [ ] Support availability response does not invent business hours; retest after prompt correction.

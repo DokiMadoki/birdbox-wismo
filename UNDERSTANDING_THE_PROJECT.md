@@ -339,3 +339,6 @@ Recording is planned for tomorrow. Do not send the draft email yet.
 - Push final changes, verify the deployed version and links, and finalize the email with video/access instructions and hosting limitations.
 
 When you return, say "Let's continue the Bird Box project." We will resume from the pending checks rather than restart.
+
+## Avoiding assumptions from prompt examples
+A live BB1043 test showed Robin saying the parcel was missing before the caller reported that. The prompt contained a BB1043 example with "since you have not received it," which likely biased the response. We removed the order-specific complaint example and required the agent to ask whether the customer received a carrier-marked-delivered parcel. There is no cross-call complaint memory implemented. We also prohibited invented business hours because no staff schedule is configured. These changes need spoken retests.
