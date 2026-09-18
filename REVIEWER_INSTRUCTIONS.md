@@ -23,3 +23,8 @@ The recording supplied by Vapi captured the customer but omitted the human rep i
 Open / to see application metrics and recent call/handoff records. The metrics include development test calls; resolution is caller-confirmed agent classification and sentiment is not CSAT. The order database is mock Shopify-style data, and tracking uses TrackingMore official TEST Carrier fixtures. Old checkpoint dates are fixture data.
 
 Free PostgreSQL expires 30 days after creation. Render shows this database expires on October 17, 2026. Please evaluate the live demo before that date. After expiry, the live order and dashboard features will not work without upgrading or migrating the database. The repository and video remain the reproducible reference. Never paste the review key into a public repository or recording.
+
+## Configured voice-platform agent
+https://dashboard.vapi.ai/assistants/c27665f4-2e9b-4cd9-a9ac-86a606ff4628
+
+This dashboard link identifies the configured Vapi assistant and may require Vapi account permissions; cross-account dashboard access has not been verified. For interactive evaluation, use the hosted browser demo with the review key. The repository contains agent_prompt.txt and configure_vapi.py for inspecting the configuration.

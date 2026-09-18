@@ -23,7 +23,8 @@ Mark only observed results. Automated backend tests do not prove voice behavior.
 - [ ] Repository reflects all final changes, and .env is absent.
 - [ ] Short video recorded, duration <= 5 minutes, no secrets visible.
 - [x] Browser review login verified live and redirects to /voice.
-- [ ] Configured voice-platform assistant link verified for submission.
+- [x] Configured voice-platform assistant URL supplied by user and matches configured assistant ID; included in draft.
+- [ ] Cross-account Vapi dashboard access checked if needed; hosted review demo remains the interactive evaluation path.
 - [ ] Client email finalized and reviewed by user; submission sent by user.
 
 - [x] Conversation brief described the customer issue in the live helper test.

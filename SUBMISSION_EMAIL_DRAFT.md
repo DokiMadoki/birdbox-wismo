@@ -10,8 +10,11 @@ The solution includes a custom dashboard based on recorded calls, showing outcom
 
 Repository: https://github.com/DokiMadoki/birdbox-wismo
 Deployment: https://birdbox-wismo.onrender.com/login
-Voice platform assistant: [ADD VERIFIED ASSISTANT SHARE/CONFIGURATION LINK]
+Voice platform assistant: https://dashboard.vapi.ai/assistants/c27665f4-2e9b-4cd9-a9ac-86a606ff4628
+Customer browser demo: https://birdbox-wismo.onrender.com/login (review login opens the call page)
 Video walkthrough: [ADD VIDEO LINK]
+
+The Vapi link identifies the configured assistant; dashboard access may require Vapi account permissions. The hosted customer demo is available using the supplied browser review key.
 
 Tracking uses TrackingMore's official test carrier records, with mock customer orders. This is a proof of concept, and the free hosting/database limits are documented.
 
