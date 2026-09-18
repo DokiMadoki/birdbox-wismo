@@ -82,7 +82,7 @@ def login(data: Login, request: Request):
         raise HTTPException(401, 'Invalid dashboard access key')
     expiry = str(int(time.time()) + 28800)
     token = expiry + '.' + hmac.new(signing_key.encode(), expiry.encode(), 'sha256').hexdigest()
-    response = JSONResponse({'state': 'authenticated'})
+    response = JSONResponse({'state': 'authenticated', 'redirect_url': '/voice' if signing_key == review_key else '/'})
     response.set_cookie('birdbox_session', token, max_age=28800, httponly=True, secure=request.url.hostname not in ('localhost', '127.0.0.1', 'testserver'), samesite='strict')
     return response
 

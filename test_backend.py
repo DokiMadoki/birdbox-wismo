@@ -31,7 +31,9 @@ class BackendTests(unittest.TestCase):
     def test_dashboard_login_does_not_authorize_mutating_tools(self):
         self.assertEqual(self.client.get('/').status_code, 401)
         self.assertEqual(self.client.post('/login', json={'api_key': 'wrong'}).status_code, 401)
-        self.assertEqual(self.client.post('/login', json={'api_key': os.environ['APP_API_KEY']}).status_code, 200)
+        login = self.client.post('/login', json={'api_key': os.environ['APP_API_KEY']})
+        self.assertEqual(login.status_code, 200)
+        self.assertEqual(login.json()['redirect_url'], '/')
         self.assertEqual(self.client.get('/').status_code, 200)
         self.assertEqual(self.client.get('/metrics').status_code, 200)
         self.assertEqual(self.client.post('/orders/lookup', json={'email': 'alex@example.com'}).status_code, 401)
@@ -145,7 +147,9 @@ class BackendTests(unittest.TestCase):
     def test_review_key_browser_access_without_backend_tool_access(self):
         review_key = 'review-' + 'r' * 40
         with patch.dict(os.environ, {'REVIEW_ACCESS_KEY': review_key}):
-            self.assertEqual(self.client.post('/login', json={'api_key': review_key}).status_code, 200)
+            login = self.client.post('/login', json={'api_key': review_key})
+            self.assertEqual(login.status_code, 200)
+            self.assertEqual(login.json()['redirect_url'], '/voice')
             for path in ['/', '/metrics', '/voice', '/support', '/support/queue']:
                 self.assertEqual(self.client.get(path).status_code, 200)
             self.assertEqual(self.client.post('/support/presence', json={'rep_id': 'review-rep', 'ready': True}, headers={'Origin': 'http://testserver'}).status_code, 200)
