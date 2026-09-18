@@ -342,3 +342,6 @@ When you return, say "Let's continue the Bird Box project." We will resume from 
 
 ## Avoiding assumptions from prompt examples
 A live BB1043 test showed Robin saying the parcel was missing before the caller reported that. The prompt contained a BB1043 example with "since you have not received it," which likely biased the response. We removed the order-specific complaint example and required the agent to ask whether the customer received a carrier-marked-delivered parcel. There is no cross-call complaint memory implemented. We also prohibited invented business hours because no staff schedule is configured. These changes need spoken retests.
+
+## Tone is also acceptance behavior
+After the factual corrections, the user found the unresolved-call ending dismissive. We instructed Robin to acknowledge the specific inconvenience, answer follow-ups, and pause instead of appending a goodbye after explaining a limit. Warmth must not become a false promise: the pilot still cannot arrange callbacks or guarantee a support schedule. A recorded note does not resolve the customer's problem. This is an example of FDE work improving the customer experience through actual feedback, not only technical correctness.

@@ -37,5 +37,7 @@ Mark only observed results. Automated backend tests do not prove voice behavior.
 - [x] Completed calls and ended rep-join history verified through the live metrics API.
 
 - [x] Address-change and refund requests respected action limits and used unavailable handoff flow in observed transcripts.
-- [ ] Delivered response asks whether received before assuming missing; retest after removing order-specific prompt example.
+- [x] Delivered response improved in the user retest after removing the order-specific complaint example.
 - [ ] Support availability response does not invent business hours; retest after prompt correction.
+
+- [ ] Unresolved-call ending stays engaged and avoids abrupt thank-you/goodbye after a limit; retest after tone correction.
