@@ -23,3 +23,6 @@ The deployed Render Docker API and PostgreSQL runtime have been verified. Local 
 
 ## Browser calls and support desk
 Set VAPI_PUBLIC_KEY and VAPI_ASSISTANT_ID on the Render web service and redeploy. Do not add VAPI_PRIVATE_KEY. Set PUBLIC_API_URL locally before running configure_vapi.py. Open /voice for the customer and /support for the rep, with microphone permission allowed.
+
+## Review access
+Add REVIEW_ACCESS_KEY to the Render web service environment, using the separately generated local .env value. It must be 32-200 characters and different from APP_API_KEY. Redeploy and verify it in a private browser window. It allows browser dashboard, calls, and human support controls, but does not authorize direct order APIs, health, or webhooks. It is not separate customer/staff roles. Rotating/removing it invalidates its browser sessions after deployment. Do not share APP_API_KEY or provider keys.

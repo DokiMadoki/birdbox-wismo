@@ -41,7 +41,7 @@ Edit `.env` privately. Set `APP_API_KEY` to a random secret of at least 32 chara
 uvicorn app:app --host 127.0.0.1 --port 8000
 ```
 
-Open `http://127.0.0.1:8000/login` and sign in with the application key. For API clients, use the `X-API-Key` header. Browser login uses a signed HttpOnly cookie; browser call and support actions require the same origin. Other tool/API mutations still require the API key.
+Open `http://127.0.0.1:8000/login` and sign in with the application key, or set a distinct REVIEW_ACCESS_KEY (32-200 characters) for browser-only demo access. For API clients, use the `X-API-Key` header. Browser login uses a signed HttpOnly cookie; browser call and support actions require the same origin. Other tool/API mutations still require the API key.
 
 ## TrackingMore setup
 
@@ -95,6 +95,8 @@ Observed live checks and pending work are in [ACCEPTANCE_CHECKLIST.md](ACCEPTANC
 
 ## Pilot limits
 
-Orders are mock data, with no Shopify write access. Robin cannot issue refunds, cancel orders, or change addresses. Human actions remain manual. Free Render services can sleep; warm the app before calls. Free PostgreSQL expires after 30 days and has no backups. Browser handoff keeps the AI/provider session active, and the observed Vapi recording captured the customer but omitted the human rep. Current application-key login is for a controlled pilot; production would need separate customer and staff access, stronger verification, retention controls, and durable hosting.
+Orders are mock data, with no Shopify write access. Robin cannot issue refunds, cancel orders, or change addresses. Human actions remain manual. Free Render services can sleep; warm the app before calls. Free PostgreSQL expires after 30 days and has no backups. Browser handoff keeps the AI/provider session active, and the observed Vapi recording captured the customer but omitted the human rep. Browser-only REVIEW_ACCESS_KEY is available for evaluation. It permits calls and support actions but not direct tool APIs. Shared-key login remains a controlled pilot; production would need separate customer and staff access, stronger verification, retention controls, and durable hosting.
 
 For the system walkthrough and interview preparation, see [UNDERSTANDING_THE_PROJECT.md](UNDERSTANDING_THE_PROJECT.md).
+
+See [REVIEWER_INSTRUCTIONS.md](REVIEWER_INSTRUCTIONS.md) for evaluation access and test scenarios. Never share APP_API_KEY with reviewers.

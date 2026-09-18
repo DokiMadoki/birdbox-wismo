@@ -17,7 +17,9 @@ Tracking uses TrackingMore's official test carrier records, with mock customer o
 
 The browser human handoff was tested with two people: the support rep received the issue brief, joined the customer's audio room, and took over while Robin remained silent. Both participants confirmed they could hear each other.
 
-[ADD: Secure method for providing limited review access. Do not send the private Vapi or TrackingMore API keys.]
+[ADD PRIVATELY: Browser-only review access key; never APP_API_KEY or provider keys. Verify review login in a fresh browser before sending.]
+
+The free service may take about a minute to wake after inactivity; please wait for the login page before starting a call. Live evaluation is available until [ADD VERIFIED DATABASE EXPIRY DATE]. Evaluation steps and test orders are in REVIEWER_INSTRUCTIONS.md in the repository.
 
 Best,
 [YOUR NAME]

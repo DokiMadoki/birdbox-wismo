@@ -142,5 +142,19 @@ class BackendTests(unittest.TestCase):
             order = json.loads(db.execute('SELECT data FROM orders WHERE order_id=?', ('order-BB1045',)).fetchone()[0])
         self.assertIn('estimated_delivery', order)
 
+    def test_review_key_browser_access_without_backend_tool_access(self):
+        review_key = 'review-' + 'r' * 40
+        with patch.dict(os.environ, {'REVIEW_ACCESS_KEY': review_key}):
+            self.assertEqual(self.client.post('/login', json={'api_key': review_key}).status_code, 200)
+            for path in ['/', '/metrics', '/voice', '/support', '/support/queue']:
+                self.assertEqual(self.client.get(path).status_code, 200)
+            self.assertEqual(self.client.post('/support/presence', json={'rep_id': 'review-rep', 'ready': True}, headers={'Origin': 'http://testserver'}).status_code, 200)
+            self.assertEqual(self.client.post('/support/presence', json={'rep_id': 'review-rep', 'ready': True}, headers={'Origin': 'https://other.example'}).status_code, 403)
+            for path, payload in [('/orders/lookup', {'email': 'alex@example.com'}), ('/orders/tracking', {'order_number': 'BB1045', 'email': 'alex@example.com'}), ('/vapi/webhook', {})]:
+                self.assertEqual(self.client.post(path, json=payload, headers={'X-API-Key': review_key}).status_code, 401)
+            self.assertEqual(self.client.get('/health', headers={'X-API-Key': review_key}).status_code, 401)
+            with patch.dict(os.environ, {'REVIEW_ACCESS_KEY': 'replacement-' + 's' * 40}):
+                self.assertEqual(self.client.get('/metrics').status_code, 401)
+
 if __name__ == '__main__':
     unittest.main()

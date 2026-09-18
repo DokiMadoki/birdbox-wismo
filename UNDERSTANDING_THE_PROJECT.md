@@ -154,7 +154,7 @@ FastAPI defines routes such as @app.post('/orders/lookup'). Pydantic validates f
 
 These solve different problems.
 
-**Application authentication** controls access to our service. APP_API_KEY protects tools and APIs. The login page checks the same key and issues an eight-hour signed cookie for permitted browser pages/actions. Cookies are HttpOnly and use Secure on deployed HTTPS. Protected browser writes also check Origin. This is basic shared-key pilot access, not individual user accounts or full customer/staff role separation.
+**Application authentication** controls access to our service. APP_API_KEY protects tools and APIs. The login page checks APP_API_KEY or the distinct REVIEW_ACCESS_KEY and issues an eight-hour signed cookie for permitted browser pages/actions. Cookies are HttpOnly and use Secure on deployed HTTPS. Protected browser writes also check Origin. This is basic shared-key pilot access, not individual user accounts or full customer/staff role separation.
 
 **Order verification** matches the identifiers supplied in conversation against an order. Number plus email, or number plus postcode, is sufficient for this challenge. It is not strong proof of identity for production: emails and postcodes may be discoverable. Email-only lookup is supported for disambiguation in this pilot. A production deployment should choose a stronger verification flow with the client.
 
@@ -162,7 +162,8 @@ Secrets have different purposes:
 
 | Variable | Purpose |
 | --- | --- |
-| APP_API_KEY | Protect our backend and pilot login; do not publish |
+| APP_API_KEY | Protect our backend and owner login; do not publish |
+| REVIEW_ACCESS_KEY | Browser-only evaluation login; share privately with reviewers, not as a backend API key |
 | TRACKINGMORE_API_KEY | Authorize carrier API requests from the backend |
 | VAPI_PRIVATE_KEY | Configure the assistant locally; not sent to Render/browser |
 | VAPI_PUBLIC_KEY | Authorize the web-call creation integration |
@@ -170,7 +171,7 @@ Secrets have different purposes:
 | PUBLIC_API_URL | Hosted backend URL for webhook configuration |
 | DATABASE_URL | PostgreSQL connection string; treat it as a secret |
 
-.env is excluded from Git and Docker build context. That prevents ordinary commits/builds from including it; it is not a guarantee that no secret can ever be leaked. Review logs, screenshots, history, and recordings separately. Never send private provider keys with the submission. Separate limited reviewer access is still pending.
+.env is excluded from Git and Docker build context. That prevents ordinary commits/builds from including it; it is not a guarantee that no secret can ever be leaked. Review logs, screenshots, history, and recordings separately. Never send private provider keys with the submission. A separate REVIEW_ACCESS_KEY now supports browser-only demo evaluation. It needs enabling and checking on Render. It cannot authenticate direct tool APIs; both customer and support demo controls remain available.
 
 ## Data model and source of truth
 
@@ -235,7 +236,7 @@ Leaving the support call can restore AI audio and return the handoff to waiting.
 
 ## Testing: what each kind proves
 
-**Backend tests:** isolated SQLite databases and mocked provider responses check access control, verification, carrier-response normalization, error states, classification persistence, duplicate completion, and handoff controls. There are 14 current tests. These do not prove actual microphone/audio or live provider availability.
+**Backend tests:** isolated SQLite databases and mocked provider responses check access control, verification, carrier-response normalization, error states, classification persistence, duplicate completion, and handoff controls. There are 15 current tests. These do not prove actual microphone/audio or live provider availability.
 
 **Browser-logic test:** test_room.cjs uses simulated browser/room objects to check permission before call creation, explicit audio subscription, playback readiness, activity display, and microphone cleanup. It does not simulate the real network or human ears.
 

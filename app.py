@@ -29,8 +29,9 @@ def authenticate(request: Request, x_api_key: str = Header(default='')):
         token = request.cookies.get('birdbox_session', '')
         try:
             expiry, signature = token.split('.', 1)
-            valid = hmac.new(expected.encode(), expiry.encode(), 'sha256').hexdigest()
-            if time.time() < int(expiry) <= time.time() + 28800 and hmac.compare_digest(signature, valid):
+            browser_keys = [expected, os.getenv('REVIEW_ACCESS_KEY', '')]
+            valid = any(key and hmac.compare_digest(signature, hmac.new(key.encode(), expiry.encode(), 'sha256').hexdigest()) for key in browser_keys)
+            if time.time() < int(expiry) <= time.time() + 28800 and valid:
                 origin_base = str(request.base_url).rstrip('/') if request.url.hostname in ('localhost', '127.0.0.1', 'testserver') else 'https://' + request.headers.get('host', '')
                 if browser_write and request.headers.get('Origin') != origin_base:
                     raise HTTPException(403, 'Same-origin browser request required')
@@ -44,6 +45,9 @@ def authenticate(request: Request, x_api_key: str = Header(default='')):
 async def lifespan(app):
     if len(os.getenv('APP_API_KEY', '')) < 32:
         raise RuntimeError('Set APP_API_KEY to a random value of at least 32 characters in .env')
+    review_key = os.getenv('REVIEW_ACCESS_KEY', '')
+    if review_key and (not 32 <= len(review_key) <= 200 or review_key == os.getenv('APP_API_KEY')):
+        raise RuntimeError('REVIEW_ACCESS_KEY must be 32-200 characters and different from APP_API_KEY')
     initialize(DB)
     initialize_handoffs(DB)
     with closing(connect(DB)) as db, db:
@@ -72,10 +76,12 @@ class Login(BaseModel):
 @app.post('/login')
 def login(data: Login, request: Request):
     expected = os.getenv('APP_API_KEY', '')
-    if not expected or not hmac.compare_digest(data.api_key, expected):
+    review_key = os.getenv('REVIEW_ACCESS_KEY', '')
+    signing_key = next((key for key in (expected, review_key) if key and hmac.compare_digest(data.api_key, key)), None)
+    if not signing_key:
         raise HTTPException(401, 'Invalid dashboard access key')
     expiry = str(int(time.time()) + 28800)
-    token = expiry + '.' + hmac.new(expected.encode(), expiry.encode(), 'sha256').hexdigest()
+    token = expiry + '.' + hmac.new(signing_key.encode(), expiry.encode(), 'sha256').hexdigest()
     response = JSONResponse({'state': 'authenticated'})
     response.set_cookie('birdbox_session', token, max_age=28800, httponly=True, secure=request.url.hostname not in ('localhost', '127.0.0.1', 'testserver'), samesite='strict')
     return response
