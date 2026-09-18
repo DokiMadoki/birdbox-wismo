@@ -16,10 +16,10 @@ Say that answers the question and finish the call.
 Explain the data is mock orders and TrackingMore official TEST Carrier API records, not real shipping data. Their checkpoint dates may predate the mock orders.
 
 ## 2:00-3:15 — Missing delivered parcel and human handoff
-You act as the rep on /support; your helper acts as the customer on /voice from another device. Record your microphone and browser audio. Play back a 10-second sample to confirm both voices before recording the full walkthrough. The observed Vapi recording omits the human rep, so it is not sufficient evidence of the complete exchange.
+You act as the rep on /support; your helper acts as the customer on /voice from another device. Record the CUSTOMER device with its microphone and browser audio so Robin and both humans are captured. Optionally record the support screen separately for the brief and Join customer visuals. Play back a 10-second sample to confirm both voices before recording the full walkthrough. The observed Vapi recording omits the human rep, so it is not sufficient evidence of the complete exchange.
 Call BB1043, jamie@example.com and report it missing.
 Robin should acknowledge carrier-marked delivered without insisting the customer received it.
-Show queued context, helper join, short two-way exchange, and AI silence.
+Show queued context, the support rep joining, a short two-way exchange, and AI silence.
 If the actual handoff test does not pass, disclose that as incomplete rather than demonstrating only a saved request.
 
 ## 3:15-4:05 — Custom dashboard

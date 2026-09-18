@@ -234,7 +234,7 @@ async def vapi_webhook(payload: dict = Body(...)):
                     outcome = Outcome.model_validate(args)
                     with closing(connect(DB)) as db, db:
                         ensure_call(db, call_id)
-                        db.execute('UPDATE calls SET outcome=?, sentiment=?, issue_type=?, summary=?, order_number=? WHERE call_id=?', (outcome.outcome, outcome.sentiment, outcome.issue_type, outcome.summary, outcome.order_number, call_id))
+                        db.execute("UPDATE calls SET outcome=?, sentiment=?, issue_type=?, summary=?, order_number=COALESCE(order_number, NULLIF(?, '')) WHERE call_id=?", (outcome.outcome, outcome.sentiment, outcome.issue_type, outcome.summary, outcome.order_number, call_id))
                     result = {'state': 'recorded', 'message': 'Outcome saved. This does not create a callback or complete a human transfer.'}
                 elif name == 'request_human':
                     result = request_handoff(DB, call, args)
@@ -243,6 +243,12 @@ async def vapi_webhook(payload: dict = Body(...)):
                         db.execute("UPDATE calls SET outcome='escalated', issue_type=?, summary=? WHERE call_id=?", (args['reason'], args['summary'], call_id))
                 else:
                     result = {'state': 'unknown_tool'}
+                if name in ('lookup_order', 'track_order') and result.get('state') == 'verified':
+                    order_number = result.get('order_number') or result.get('order', {}).get('order_number')
+                    if order_number:
+                        with closing(connect(DB)) as db, db:
+                            ensure_call(db, call_id)
+                            db.execute('UPDATE calls SET order_number=? WHERE call_id=?', (order_number, call_id))
             except (ValueError, TypeError):
                 result = {'state': 'invalid_arguments', 'message': 'Confirm required values and retry.'}
             results.append({'name': name, 'toolCallId': tool.get('id'), 'result': json.dumps(result)})

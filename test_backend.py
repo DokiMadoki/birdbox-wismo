@@ -19,6 +19,17 @@ class BackendTests(unittest.TestCase):
         self.temp.cleanup()
     def post(self, path, data):
         return self.client.post(path, json=data, headers=self.headers).json()
+    def test_verified_order_persists_without_optional_outcome_field(self):
+        def tool(name, args):
+            return self.post('/vapi/webhook', {'message': {'type': 'tool-calls', 'call': {'id': 'order-persistence'}, 'toolCallList': [{'id': 'tool', 'name': name, 'parameters': args}]}})
+        tool('lookup_order', {'order_number': 'BB1046', 'email': 'taylor@example.com'})
+        outcome = {'outcome': 'resolved', 'sentiment': 'neutral', 'issue_type': 'tracking', 'summary': 'Split shipment explained.'}
+        tool('record_outcome', outcome)
+        self.assertEqual(self.client.get('/metrics', headers=self.headers).json()['calls'][0]['order_number'], 'BB1046')
+        tool('lookup_order', {'order_number': 'BB1043', 'email': 'wrong@example.com'})
+        tool('record_outcome', dict(outcome, order_number='BB1043'))
+        self.assertEqual(self.client.get('/metrics', headers=self.headers).json()['calls'][0]['order_number'], 'BB1046')
+
     def test_all_endpoints_require_key(self):
         for path in ['/health', '/orders/lookup', '/orders/tracking']:
             response = self.client.get(path) if path == '/health' else self.client.post(path, json={})
