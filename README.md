@@ -82,7 +82,7 @@ docker compose up --build
 
 Compose persists local SQLite in a named volume. `render.yaml` deploys the Docker API and a separate PostgreSQL database. Render supplies `DATABASE_URL`. See [DEPLOYMENT.md](DEPLOYMENT.md) for environment variables and free-tier limitations. The live Render Docker deployment has been verified; local Docker Compose has not been independently executed.
 
-## Verification and submission
+## Verification
 
 ```powershell
 python -m unittest test_backend -v
@@ -91,12 +91,10 @@ node test_room.cjs
 
 Backend tests use isolated SQLite databases and mocked carrier/provider responses. The JavaScript test checks permission ordering, subscription and playback readiness, microphone activity, and cleanup. These tests do not prove live human audio or every spoken edge case.
 
-Observed live checks and pending work are in [ACCEPTANCE_CHECKLIST.md](ACCEPTANCE_CHECKLIST.md). Use [VOICE_TESTS.md](VOICE_TESTS.md) for remaining manual scenarios, [VIDEO_SCRIPT.md](VIDEO_SCRIPT.md) for the walkthrough, and [SUBMISSION_EMAIL_DRAFT.md](SUBMISSION_EMAIL_DRAFT.md) for the email draft.
+Use [VOICE_TESTS.md](VOICE_TESTS.md) for manual voice scenarios and [HANDOFF_TEST.md](HANDOFF_TEST.md) for browser human-takeover verification.
 
 ## Pilot limits
 
 Orders are mock data, with no Shopify write access. Robin cannot issue refunds, cancel orders, or change addresses. Human actions remain manual. Free Render services can sleep; warm the app before calls. Free PostgreSQL expires after 30 days and has no backups. Browser handoff keeps the AI/provider session active, and the observed Vapi recording captured the customer but omitted the human rep. Browser-only REVIEW_ACCESS_KEY is available for evaluation. It permits calls and support actions but not direct tool APIs. Shared-key login remains a controlled pilot; production would need separate customer and staff access, stronger verification, retention controls, and durable hosting.
-
-For the system walkthrough and interview preparation, see [UNDERSTANDING_THE_PROJECT.md](UNDERSTANDING_THE_PROJECT.md).
 
 See [REVIEWER_INSTRUCTIONS.md](REVIEWER_INSTRUCTIONS.md) for evaluation access and test scenarios. Never share APP_API_KEY with reviewers.
