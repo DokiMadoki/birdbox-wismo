@@ -41,3 +41,5 @@ Mark only observed results. Automated backend tests do not prove voice behavior.
 - [ ] Support availability response does not invent business hours; retest after prompt correction.
 
 - [x] Unresolved-call tone retest improved based on user report.
+
+- [x] Database expiry confirmed by user from Render: October 17, 2026; included in reviewer instructions and email draft.

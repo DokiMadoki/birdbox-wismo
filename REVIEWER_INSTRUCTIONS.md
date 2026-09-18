@@ -22,4 +22,4 @@ The recording supplied by Vapi captured the customer but omitted the human rep i
 
 Open / to see application metrics and recent call/handoff records. The metrics include development test calls; resolution is caller-confirmed agent classification and sentiment is not CSAT. The order database is mock Shopify-style data, and tracking uses TrackingMore official TEST Carrier fixtures. Old checkpoint dates are fixture data.
 
-Free PostgreSQL expires 30 days after creation. The exact availability end date will be confirmed and included in the submission email. After that date, live access is not guaranteed. The repository and video remain the reproducible reference. Never paste the review key into a public repository or recording.
+Free PostgreSQL expires 30 days after creation. Render shows this database expires on October 17, 2026. Please evaluate the live demo before that date. After expiry, the live order and dashboard features will not work without upgrading or migrating the database. The repository and video remain the reproducible reference. Never paste the review key into a public repository or recording.

@@ -26,3 +26,6 @@ Set VAPI_PUBLIC_KEY and VAPI_ASSISTANT_ID on the Render web service and redeploy
 
 ## Review access
 Add REVIEW_ACCESS_KEY to the Render web service environment, using the separately generated local .env value. It must be 32-200 characters and different from APP_API_KEY. Redeploy and verify it in a private browser window. It allows browser dashboard, calls, and human support controls, but does not authorize direct order APIs, health, or webhooks. It is not separate customer/staff roles. Rotating/removing it invalidates its browser sessions after deployment. Do not share APP_API_KEY or provider keys.
+
+## Current evaluation window
+The user confirmed Render shows the birdbox-orders database expiry date as October 17, 2026. Reviewers should evaluate before that date. This is not a guarantee of uninterrupted availability; free-tier sleep and provider dependencies still apply.

@@ -19,7 +19,7 @@ The browser human handoff was tested with two people: the support rep received t
 
 [ADD PRIVATELY: Browser-only review access key; never APP_API_KEY or provider keys. Verify review login in a fresh browser before sending.]
 
-The free service may take about a minute to wake after inactivity; please wait for the login page before starting a call. Live evaluation is available until [ADD VERIFIED DATABASE EXPIRY DATE]. Evaluation steps and test orders are in REVIEWER_INSTRUCTIONS.md in the repository.
+The free service may take about a minute to wake after inactivity; please wait for the login page before starting a call. The free database expires on October 17, 2026; please evaluate the live demo before that date. Evaluation steps and test orders are in REVIEWER_INSTRUCTIONS.md in the repository.
 
 Best,
 [YOUR NAME]
