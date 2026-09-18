@@ -10,8 +10,8 @@ I built Robin for Bird Box's Where Is My Order support calls. The AI verifies an
 Show the repository and simple architecture. Explain Docker and HTTPS deployment on Render. The brief allows any cloud; Render reduces setup for a short proof of concept. The separate database preserves call records across API restarts. State free-tier sleep and database-expiry limitations.
 
 ## 1:00-2:00 — Successful live browser call
-Show /voice and call with BB1042, alex@example.com.
-Robin should say the parcel is in transit and no carrier ETA is available.
+Show /voice and call with BB1046, taylor@example.com.
+Robin should fetch carrier tracking for the T-shirt and explain the unshipped cap separately. Ask about the cap arrival date; no confirmed date should be invented.
 Say that answers the question and finish the call.
 Explain the data is mock orders and TrackingMore official TEST Carrier API records, not real shipping data. Their checkpoint dates may predate the mock orders.
 
@@ -31,3 +31,6 @@ No invented CSAT or financial savings.
 Explain multiple orders, unshipped items, split packages, provider outages, and refund/address limits.
 The agent escalates actions it is not authorized to perform. Missing verification does not reveal order details.
 Mention the tests, Docker reproducibility, and scope still unsuitable for unattended production.
+
+## Two-call plan and overlays
+Use DEMO_CALL_PLAN.md for the scripts and recording arrangement, and EDGE_CASES_FOR_VIDEO.md for two readable edge-case cards. Record complete handoff audio on the CUSTOMER device: the rep browser cannot hear Robin before joining. Optionally capture the support-screen brief as a visual insert.
