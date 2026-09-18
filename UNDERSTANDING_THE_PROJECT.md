@@ -236,7 +236,7 @@ Leaving the support call can restore AI audio and return the handoff to waiting.
 
 ## Testing: what each kind proves
 
-**Backend tests:** isolated SQLite databases and mocked provider responses check access control, verification, carrier-response normalization, error states, classification persistence, duplicate completion, and handoff controls. There are 15 current tests. These do not prove actual microphone/audio or live provider availability.
+**Backend tests:** isolated SQLite databases and mocked provider responses check access control, verification, carrier-response normalization, error states, classification persistence, duplicate completion, and handoff controls. There are 16 current tests. These do not prove actual microphone/audio or live provider availability.
 
 **Browser-logic test:** test_room.cjs uses simulated browser/room objects to check permission before call creation, explicit audio subscription, playback readiness, activity display, and microphone cleanup. It does not simulate the real network or human ears.
 
@@ -345,3 +345,6 @@ A live BB1043 test showed Robin saying the parcel was missing before the caller 
 
 ## Tone is also acceptance behavior
 After the factual corrections, the user found the unresolved-call ending dismissive. We instructed Robin to acknowledge the specific inconvenience, answer follow-ups, and pause instead of appending a goodbye after explaining a limit. Warmth must not become a false promise: the pilot still cannot arrange callbacks or guarantee a support schedule. A recorded note does not resolve the customer's problem. This is an example of FDE work improving the customer experience through actual feedback, not only technical correctness.
+
+## Dashboard outcome and failure context
+The dashboard now shows counts of resolved, escalated, and unresolved completed calls. It displays each call end reason and counts completed calls whose provider end reason contains "error". This identifies the observed development connection failures without deleting them or changing the resolution denominator. The error count is not a comprehensive production failure classifier. Outcome totals use all completed calls; issue/sentiment charts use completed calls within the latest 100 records. Missing issue classification is labeled unclassified rather than treated as a known customer reason.

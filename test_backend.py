@@ -160,5 +160,20 @@ class BackendTests(unittest.TestCase):
             with patch.dict(os.environ, {'REVIEW_ACCESS_KEY': 'replacement-' + 's' * 40}):
                 self.assertEqual(self.client.get('/metrics').status_code, 401)
 
+    def test_metrics_distinguishes_outcomes_and_provider_error_endings(self):
+        from contextlib import closing
+        with closing(app.connect(app.DB)) as db, db:
+            for call_id, outcome, reason in [('resolved-call', 'resolved', 'customer-ended-call'), ('human-call', 'escalated', 'customer-ended-call'), ('failed-call', 'unresolved', 'call.in-progress.error-assistant-did-not-receive-customer-audio')]:
+                app.ensure_call(db, call_id)
+                db.execute('UPDATE calls SET outcome=?, completed=1, ended_reason=? WHERE call_id=?', (outcome, reason, call_id))
+            app.ensure_call(db, 'still-active')
+        result = self.client.get('/metrics', headers=self.headers).json()
+        self.assertEqual(result['completed_calls'], 3)
+        self.assertEqual(result['resolved_calls'], 1)
+        self.assertEqual(result['unresolved_calls'], 1)
+        self.assertEqual(result['escalation_requests'], 1)
+        self.assertEqual(result['provider_error_calls'], 1)
+        self.assertAlmostEqual(result['resolution_rate'], 1 / 3)
+
 if __name__ == '__main__':
     unittest.main()

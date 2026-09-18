@@ -278,6 +278,9 @@ def metrics():
     durations = [r['duration'] for r in completed if r['duration'] is not None]
     return {
         'completed_calls': len(completed),
+        'resolved_calls': sum(r['outcome'] == 'resolved' for r in completed),
+        'unresolved_calls': sum(r['outcome'] == 'unresolved' for r in completed),
+        'provider_error_calls': sum('error' in (r['ended_reason'] or '').lower() for r in completed),
         'resolution_rate': sum(r['outcome'] == 'resolved' for r in completed) / len(completed) if completed else None,
         'escalation_requests': sum(r['outcome'] == 'escalated' for r in completed),
         'average_duration_seconds': sum(durations) / len(durations) if durations else None,

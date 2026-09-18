@@ -16,7 +16,7 @@ async function loadHandoffs(){
     const data=await r.json();handoffContent.replaceChildren();
     const joined=data.handoffs.filter(h=>h.joined_at!=null).length;
     const note=document.createElement('p');note.className='muted';
-    note.textContent=data.handoffs.length+' recorded requests · '+joined+' reported rep joins · '+(data.rep_available?'Rep available':'No rep currently available')+'. A reported join means browser room join and accepted AI mute; two-way audio must be checked in the demo.';
+    note.textContent=data.handoffs.length+' requests in recent history · '+joined+' reported rep joins · '+(data.rep_available?'Rep available':'No rep currently available')+'. A reported join means browser room join and accepted AI mute; live two-way audio was validated separately in a two-person pilot test.';
     handoffContent.append(note);
     for(const h of data.handoffs.slice(0,10)){
       const p=document.createElement('p');p.className='muted';p.textContent=h.state+' · '+h.reason.replaceAll('_',' ')+' · '+h.summary;handoffContent.append(p);
